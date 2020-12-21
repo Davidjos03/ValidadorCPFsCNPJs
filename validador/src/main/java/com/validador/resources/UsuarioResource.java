@@ -54,7 +54,17 @@ public class UsuarioResource {
 	@ApiOperation(value = "Retorna um usuario específico")
 	@GetMapping(value = "/{cdUsuario}", produces = "application/json")
 	public @ResponseBody Usuario usuario(@PathVariable(value = "cdUsuario") long cdUsuario) {
-		Usuario usuario = ur.findByCdUsuario(cdUsuario);
+		List<Usuario> usuarios = ur.findAll();
+		
+		Usuario usuario = null;
+		for(Usuario u: usuarios) {
+			if(u.getCdUsuario() == cdUsuario) {
+				usuario = u;
+				break;
+			}
+		}
+		
+		
 		usuario.add(linkTo(methodOn(UsuarioResource.class).listaUsuarios()).withRel("Lista de Usuarios"));
 		return usuario;
 	}
