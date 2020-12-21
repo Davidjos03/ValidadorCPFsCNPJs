@@ -9,9 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.validador.models.Transacao;
+import com.validador.models.Requisicao;
 import com.validador.models.Usuario;
-import com.validador.resources.TransacaoResource;
+import com.validador.resources.RequisicaoResource;
 import com.validador.resources.UsuarioResource;
 
 @RunWith(SpringRunner.class)
@@ -24,7 +24,7 @@ public class ValidadorApplicationTests {
 	UsuarioResource userResource;
 	
 	@Autowired
-	TransacaoResource transacaoResource;
+	RequisicaoResource transacaoResource;
 	
 	int idUser;
 	
@@ -94,12 +94,12 @@ public class ValidadorApplicationTests {
 		Usuario usuario = userResource.cadastraUsuario(user);
 		idUser = usuario.getCdUsuario();
 
-		Transacao tr = new Transacao();
+		Requisicao tr = new Requisicao();
 		
 		tr.setCPFouCNPJ("056.790.581-03");
 		tr.setUsuario(usuario);
 		
-		String transacao = transacaoResource.cadastraTransacao(tr);
+		String transacao = transacaoResource.cadastraRequisicao(tr);
 		
 		assertEquals("O CPF 056.790.581-03 é válido. Valor da dívida do usuario:0.1", transacao);
 
@@ -114,18 +114,18 @@ public class ValidadorApplicationTests {
 		Usuario usuario = userResource.cadastraUsuario(user);
 		idUser = usuario.getCdUsuario();
 
-		Transacao tr = new Transacao();
+		Requisicao tr = new Requisicao();
 		
 		tr.setCPFouCNPJ("056.790.581-03");
 		tr.setUsuario(usuario);
 		
 		
-		String rTransacao = transacaoResource.cadastraTransacao(tr);
+		String rTransacao = transacaoResource.cadastraRequisicao(tr);
 
 		
 		assertEquals("O CPF 056.790.581-03 é válido. Valor da dívida do usuario:0.1", rTransacao);
 
-		Transacao transacao = transacaoResource.deletaTransacao(tr);
+		transacaoResource.deletaRequisicao(tr);
 	}
 	
 	

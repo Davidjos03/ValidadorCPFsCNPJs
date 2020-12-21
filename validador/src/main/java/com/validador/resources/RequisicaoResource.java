@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.validador.models.Transacao;
+import com.validador.models.Requisicao;
 import com.validador.models.Usuario;
-import com.validador.repository.TransacaoRepository;
+import com.validador.repository.RequisicaoRepository;
 import com.validador.repository.UsuarioRepository;
 import com.validadorBO.ValidaCNPJ;
 import com.validadorBO.ValidaCPF;
@@ -32,46 +32,46 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "API REST Validador")
 @RestController
 @RequestMapping("/validador")
-public class TransacaoResource {
+public class RequisicaoResource {
 
 	@Autowired
-	private TransacaoRepository et;
+	private RequisicaoRepository et;
 
 	@Autowired
 	private UsuarioRepository ur;
 
-	@ApiOperation(value = "Retorna uma lista de transacoes")
+	@ApiOperation(value = "Retorna uma lista de Requisicoes")
 	@GetMapping(produces = "application/json")
-	public @ResponseBody ArrayList<Transacao> listaTransacoes() {
-		Iterable<Transacao> listaTransacoes = et.findAll();
-		ArrayList<Transacao> transacoes = new ArrayList<Transacao>();
-		for (Transacao transacao : listaTransacoes) {
-			long codigo = transacao.getCodigo();
-			transacao.add(linkTo(methodOn(TransacaoResource.class).transacao(codigo)).withSelfRel());
-			transacoes.add(transacao);
+	public @ResponseBody ArrayList<Requisicao> listaRequisicaoes() {
+		Iterable<Requisicao> listaRequisicaoes = et.findAll();
+		ArrayList<Requisicao> requisicoes = new ArrayList<Requisicao>();
+		for (Requisicao requisicao : listaRequisicaoes) {
+			long codigo = requisicao.getCodigo();
+			requisicao.add(linkTo(methodOn(RequisicaoResource.class).requisicao(codigo)).withSelfRel());
+			requisicoes.add(requisicao);
 		}
-		return transacoes;
+		return requisicoes;
 	}
 
-	@ApiOperation(value = "Retorna uma transacao específico")
+	@ApiOperation(value = "Retorna uma requisicao específico")
 	@GetMapping(value = "/{codigo}", produces = "application/json")
-	public @ResponseBody Transacao transacao(@PathVariable(value = "codigo") long codigo) {
-		Transacao transacao = et.findByCodigo(codigo);
-		transacao.add(linkTo(methodOn(TransacaoResource.class).listaTransacoes()).withRel("Lista de Transacoes"));
-		return transacao;
+	public @ResponseBody Requisicao requisicao(@PathVariable(value = "codigo") long codigo) {
+		Requisicao requisicao = et.findByCodigo(codigo);
+		requisicao.add(linkTo(methodOn(RequisicaoResource.class).listaRequisicaoes()).withRel("Lista de Requisicaoes"));
+		return requisicao;
 	}
 
-	@ApiOperation(value = "Salva uma transacao")
+	@ApiOperation(value = "Salva uma requisicao")
 	@PostMapping()
-	public String cadastraTransacao(@RequestBody @Valid Transacao transacao) {
+	public String cadastraRequisicao(@RequestBody @Valid Requisicao requisicao) {
 
 		String tipoBusca = null, valido = null;
-		transacao.setData(new Date(System.currentTimeMillis()));
+		requisicao.setData(new Date(System.currentTimeMillis()));
 
-		Usuario user = transacao.getUsuario();
+		Usuario user = requisicao.getUsuario();
 
 		String digitos = "";
-		char[] letras = transacao.getCPFouCNPJ().toCharArray();
+		char[] letras = requisicao.getCPFouCNPJ().toCharArray();
 		for (char letra : letras) {
 			if (Character.isDigit(letra)) {
 				digitos += letra;
@@ -79,18 +79,18 @@ public class TransacaoResource {
 		}
 
 		if (digitos.length() == 11) {
-			transacao.setValido(ValidaCPF.isCPF(digitos));
+			requisicao.setValido(ValidaCPF.isCPF(digitos));
 			tipoBusca = "O CPF ";
-			if (transacao.isValido()) {
+			if (requisicao.isValido()) {
 				valido = " é válido.";
 			} else {
 				valido = " não é válido.";
 			}
 		} else {
 			if (digitos.length() == 14) {
-				transacao.setValido(ValidaCNPJ.isCNPJ(digitos));
+				requisicao.setValido(ValidaCNPJ.isCNPJ(digitos));
 				tipoBusca = "O CNPJ ";
-				if (transacao.isValido()) {
+				if (requisicao.isValido()) {
 					valido = " é válido.";
 				} else {
 					valido = " não é válido.";
@@ -102,48 +102,48 @@ public class TransacaoResource {
 
 		}
 
-		user.getTransacao().add(transacao);
+		user.getRequisicao().add(requisicao);
 		user.setValorDividaUsuario(0.1);
-		transacao.setUsuario(user);
+		requisicao.setUsuario(user);
 
-		if(transacao.getCodigo()!=0) {
-			transacao.setCodigo(0);
+		if(requisicao.getCodigo()!=0) {
+			requisicao.setCodigo(0);
 		}
-		et.save(transacao);
+		et.save(requisicao);
 
 		float valDivida = (float) updateUser(user).getValorDividaUsuario();
 
-		return tipoBusca + transacao.getCPFouCNPJ() + valido + " Valor da dívida do usuario:" + valDivida;
+		return tipoBusca + requisicao.getCPFouCNPJ() + valido + " Valor da dívida do usuario:" + valDivida;
 	}
 
-	@ApiOperation(value = "Deleta uma transacao")
+	@ApiOperation(value = "Deleta uma requisicao")
 	@DeleteMapping()
-	public Transacao deletaTransacao(@RequestBody Transacao transacao) {
-		if (transacao.getCodigo() != 0) {
+	public Requisicao deletaRequisicao(@RequestBody Requisicao requisicao) {
+		if (requisicao.getCodigo() != 0) {
 
 			List<Usuario> listUser = ur.findAll();
 
 			Usuario userDB = null;
 
 			for (Usuario usuario : listUser) {
-				if (transacao.getUsuario().getCdUsuario() == usuario.getCdUsuario()) {
+				if (requisicao.getUsuario().getCdUsuario() == usuario.getCdUsuario()) {
 					userDB = usuario;
 				}
 			}
 
-			for (int i = 0; 1 <= userDB.getTransacao().size(); i++) {
-				if (transacao.getCodigo() == userDB.getTransacao().get(i).getCodigo()) {
-					userDB.getTransacao().remove(i);
+			for (int i = 0; 1 <= userDB.getRequisicao().size(); i++) {
+				if (requisicao.getCodigo() == userDB.getRequisicao().get(i).getCodigo()) {
+					userDB.getRequisicao().remove(i);
 					break;
 				}
 
 			}
 			ur.save(userDB);
-			transacao.setUsuario(null);
-			et.delete(transacao);
+			requisicao.setUsuario(null);
+			et.delete(requisicao);
 		}
 
-		return transacao;
+		return requisicao;
 	}
 
 	public Usuario updateUser(Usuario user) {
@@ -160,7 +160,7 @@ public class TransacaoResource {
 		float somaDivida = (float) (user.getValorDividaUsuario() + userDB.getValorDividaUsuario());
 		
 
-		user.getTransacao().addAll(userDB.getTransacao());
+		user.getRequisicao().addAll(userDB.getRequisicao());
 		user.setValorDividaUsuario(somaDivida);
 
 		user.add(linkTo(methodOn(UsuarioResource.class).listaUsuarios()).withRel("Lista de Usuarios"));

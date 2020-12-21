@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.validador.models.Transacao;
+import com.validador.models.Requisicao;
 import com.validador.models.Usuario;
-import com.validador.repository.TransacaoRepository;
+import com.validador.repository.RequisicaoRepository;
 import com.validador.repository.UsuarioRepository;
 
 import io.swagger.annotations.Api;
@@ -36,7 +36,7 @@ public class UsuarioResource {
 	private UsuarioRepository ur;
 
 	@Autowired
-	private TransacaoRepository et;
+	private RequisicaoRepository et;
 
 	@ApiOperation(value = "Retorna uma lista de Usuarios")
 	@GetMapping(produces = "application/json")
@@ -91,17 +91,17 @@ public class UsuarioResource {
 			if (user.getCdUsuario() == usuario.getCdUsuario()) {
 				userDB = usuario;
 				try {
-					int j = userDB.getTransacao().size();
+					int j = userDB.getRequisicao().size();
 					
 					for (int i = 0; i <= j-1;i++) {
 						
-						Transacao trans = userDB.getTransacao().get(i); 
+						Requisicao req = userDB.getRequisicao().get(i); 
 						
-						userDB.getTransacao().remove(trans);
+						userDB.getRequisicao().remove(req);
 						ur.save(userDB);
 						
-						trans.setUsuario(null);
-						et.delete(trans);
+						req.setUsuario(null);
+						et.delete(req);
 						
 						i--;
 						j--;
