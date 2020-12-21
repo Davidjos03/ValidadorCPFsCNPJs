@@ -1,3 +1,14 @@
+Tecnologias Utilizadas:
+-Maven
+-SpringBoot
+-Postman
+-JPA
+-JAVA 8
+-Swagger
+-PostgreSQL
+
+-------------------------------------------------------
+
 - É necessário criar no banco de dados o DataBase chamado "validador", as tabelas serão carregadas ao executar o projeto.
 
 - A Classe DataConfiguration armazena as informações para comunicação com o Banco de Dados Postgresql, insira o username e password correspondentes ao seu banco de dados.
