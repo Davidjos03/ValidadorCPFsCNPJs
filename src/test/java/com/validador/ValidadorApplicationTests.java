@@ -24,7 +24,7 @@ public class ValidadorApplicationTests {
 	UsuarioResource userResource;
 	
 	@Autowired
-	RequisicaoResource transacaoResource;
+	RequisicaoResource requisicaoResource;
 	
 	int idUser;
 	
@@ -99,9 +99,9 @@ public class ValidadorApplicationTests {
 		tr.setCPFouCNPJ("056.790.581-03");
 		tr.setUsuario(usuario);
 		
-		String transacao = transacaoResource.cadastraRequisicao(tr);
+		String requisicao = requisicaoResource.cadastraRequisicao(tr);
 		
-		assertEquals("O CPF 056.790.581-03 é válido. Valor da dívida do usuario:0.1", transacao);
+		assertEquals("O CPF 056.790.581-03 é válido. Valor da dívida do usuario:0.1", requisicao);
 
 	}
 	
@@ -120,12 +120,12 @@ public class ValidadorApplicationTests {
 		tr.setUsuario(usuario);
 		
 		
-		String rTransacao = transacaoResource.cadastraRequisicao(tr);
+		String rRequisicao = requisicaoResource.cadastraRequisicao(tr);
 
 		
-		assertEquals("O CPF 056.790.581-03 é válido. Valor da dívida do usuario:0.1", rTransacao);
+		assertEquals("O CPF 056.790.581-03 é válido. Valor da dívida do usuario:0.1", rRequisicao);
 
-		transacaoResource.deletaRequisicao(tr);
+		requisicaoResource.deletaRequisicao(tr);
 	}
 	
 	

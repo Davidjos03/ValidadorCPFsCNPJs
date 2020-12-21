@@ -5,7 +5,7 @@
     <persistence-unit name="ExemplosJPAPU">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>com.validador.models.Usuario</class>
-         <class>com.validador.models.Transacao</class>
+         <class>com.validador.models.Requisicao</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
