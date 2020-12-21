@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
-public class Transacao extends ResourceSupport{
+public class Requisicao extends ResourceSupport{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

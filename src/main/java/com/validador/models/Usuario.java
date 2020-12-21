@@ -8,7 +8,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 
@@ -32,15 +31,15 @@ public class Usuario extends ResourceSupport{
 	private String senha;
 	
 	@OneToMany(fetch = FetchType.EAGER)
-	@JoinTable(name="usuario_transacao")
-	private List<Transacao> transacao = new ArrayList<Transacao>();
+	@JoinTable(name="usuario_requisicao")
+	private List<Requisicao> requisicao = new ArrayList<Requisicao>();
 	
-	public List<Transacao> getTransacao() {
-		return transacao;
+	public List<Requisicao> getRequisicao() {
+		return requisicao;
 	}
 
-	public void setTransacao(List<Transacao> transacao) {
-		this.transacao = transacao;
+	public void setRequisicao(List<Requisicao> requisicao) {
+		this.requisicao = requisicao;
 	}
 
 	private double valorDividaUsuario;
